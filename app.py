@@ -54,8 +54,9 @@ with logo_col:
 
 #st.subheader(f"Kimi Antonelli vs George Russell — {selectedGp}")
 session = fastf1.get_session(2025, selectedGp, 'Q')
-with st.spinner("BOX BOX BOX.."):
-    session.load(telemetry=False, weather=False, messages=False)
+session.load(telemetry=False, weather=False, messages=False)
+#with st.spinner("BOX BOX BOX.."):
+    #session.load(telemetry=False, weather=False, messages=False)
 
 j = session.laps
 
