@@ -3,9 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from pathlib import Path
-import time
-from fastf1.exceptions import DataNotLoadedError
 
 st.markdown("""
 <style>
@@ -24,10 +21,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-cache_dir = Path("cache")
-cache_dir.mkdir(exist_ok=True)
-
-fastf1.Cache.enable_cache(str(cache_dir))
+#fastf1.Cache.enable_cache("./cache")
 
 schedule = fastf1.get_event_schedule(2025, include_testing=False)
 locations = schedule['Location']
@@ -55,33 +49,25 @@ with logo_col:
 
 
 #st.subheader(f"Kimi Antonelli vs George Russell — {selectedGp}")
-session = fastf1.get_session(2025, selectedGp, 'Q')
+#session = fastf1.get_session(2025, selectedGp, 'Q')
+with st.spinner("BOX BOX BOX.."):
+    csvPath = f"trackData/{selectedGp}.csv"
+    #session.load()
 
 
-for attempt in range(3):
-    with st.spinner(f"Loading session (attempt {attempt + 1}/3)..."):
-        session.load(laps=True, telemetry=False, weather=False, messages=False)
+#laps = session.laps
+laps = pd.read_csv(csvPath)
 
-    try:
-        j = session.laps
-        break
-    except DataNotLoadedError:
-        if attempt == 2:
-            st.error("FastF1 lap data is unavailable right now. Please try again later.")
-            st.stop()
-        time.sleep(3)
+timeCol = ['LapTime', 'Sector1Time', 'Sector2Time', 'Sector3Time']
 
-#session.load(telemetry=False, weather=False, messages=False)
-#with st.spinner("BOX BOX BOX.."):
-    #session.load(telemetry=False, weather=False, messages=False)
-
-j = session.laps
+for col in timeCol:
+    laps[col] = pd.to_timedelta(laps[col])
 
 
-session.laps.to_csv("laps.csv", index=False)
+#session.laps.to_csv("laps.csv", index=False)
 
-antLaps = j.pick_driver('ANT')
-rusLaps = j.pick_driver('RUS')
+antLaps = laps[laps['Driver'] == 'ANT']  #laps.pick_driver('ANT')
+rusLaps = laps[laps['Driver'] == 'RUS']  #laps.pick_driver('RUS')
 
 antClean = antLaps[(antLaps['IsAccurate'] == True) & (antLaps['Deleted'] == False)]
 rusClean = rusLaps[(rusLaps['IsAccurate'] == True) & (rusLaps['Deleted'] == False)]
