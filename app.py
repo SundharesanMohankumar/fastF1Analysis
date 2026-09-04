@@ -52,12 +52,13 @@ with logo_col:
 #st.subheader(f"Kimi Antonelli vs George Russell — {selectedGp}")
 #session = fastf1.get_session(2025, selectedGp, 'Q')
 with st.spinner("BOX BOX BOX.."):
+    time.sleep(3)
     csvPath = f"trackData/{selectedGp}.csv"
     #session.load()
 
 
 #laps = session.laps
-time.sleep(3)
+
 laps = pd.read_csv(csvPath)
 
 timeCol = ['LapTime', 'Sector1Time', 'Sector2Time', 'Sector3Time']
