@@ -31,6 +31,8 @@ title_col, logo_col = st.columns([4, 1])
 with title_col:
     st.title("Mercedes 2025 Qualifying Performance")
     st.caption("A data-driven comparison of Mercedes qualifying performance across the 2025 Formula 1 season using FastF1, pandas, NumPy and Streamlit.")
+    st.write("2025 is strange year for Mercedes and Formula1. One of the biggest transfers happened around the grid. Lewis Hamilton joined the Ferrari and entire world were waiting to see who is going to fill those shoes. But Toto brought a little italian kid to replace Lewis. Kimi Antonelli, A wonder kid who wears 12 on his kit. The world wondered! But at time I'm writing this in 2026, He's leading the Driver's championship. A wonder kid indeed! So by this small analysis I thought of looking back to 2025 season. Hope you guys like it.")
+
     sp1 , sp2 = st.columns([5,1])
     with sp1:
         selectedGp = st.selectbox('Selecte the Grand Prix', locations)
@@ -118,13 +120,13 @@ with col1:
     with col11:
         st.metric("Antonelli's best (s)",f'{antBestPace.total_seconds():.3f}', delta=f"{abs(bestInterval.total_seconds()):.3f} s {diffText}", delta_color=bestDeltaColor)
     with col12:
-        st.image("assets/kimi.png", width=70)
+        st.image("assets/kimi.png", width=90)
 with col2:
     col21 , col22 = st.columns([1.25,1])
     with col21:
         st.metric("Russell's best (s)", f'{rusBestPace.total_seconds():.3f}')
     with col22:
-        st.image("assets/rus.png", width=70)
+        st.image("assets/rus.png", width=90)
 
 
 if consistencyDiff < 0:
@@ -143,9 +145,9 @@ if avgDiff.total_seconds() < 0:
 col3 , col4 = st.columns(2)
 
 with col3:
-    st.metric("Interval between both the drivers (s)", f'{bestInterval.total_seconds():.3f}')
+    st.metric("Best lap gap (s)", f'{bestInterval.total_seconds():.3f}')
 with col4:
-    st.metric("Avg difference between both the drivers in seconds (s)", f"{avgDiff.total_seconds():.3f}",delta=f"{abs(avgDiff.total_seconds()):.3f} s {avgDiffText}", delta_color=avgDeltaColor)
+    st.metric("Average pace gap (s)", f"{avgDiff.total_seconds():.3f}",delta=f"{abs(avgDiff.total_seconds()):.3f} s {avgDiffText}", delta_color=avgDeltaColor)
 
 
 col5, col6 = st.columns(2)
@@ -195,20 +197,21 @@ with graph_col1:
     ##----------------
     ##Graph 1 — Representative Lap Pace
 
-    plt.figure()
+    plt.figure(facecolor="#0E1117")
+    plt.gca().set_facecolor("#0E1117")
 
     antPaceSecs = antPace['LapTime'].dt.total_seconds()
     rusPaceSecs = rusPace['LapTime'].dt.total_seconds()
 
     st.caption("Note:the lowest point denotes the fastest lap")
-    plt.plot(antPace['LapNumber'], antPaceSecs, label='ANT', color='#000000')
+    plt.plot(antPace['LapNumber'], antPaceSecs, label='ANT', color="#D9D9D9")
     plt.plot(rusPace['LapNumber'], rusPaceSecs, label = 'RUS', color='#4FAFA9')
 
-    plt.xlabel('Lap Number')
-    plt.ylabel('Time in seconds')
+    plt.xlabel('Lap Number',color="white")
+    plt.ylabel('Time in seconds',color="white")
     plt.legend()
-    plt.title('Antonelli vs Russell: Representative Lap Comparison')
-
+    plt.title('Antonelli vs Russell: Representative Lap Comparison',color="white")
+    plt.tick_params(colors="white")
     # plt.figtext(0.5, 0.01, 'Note:the lowest point denotes the fastest lap',ha='center')
     plt.tight_layout()
 
@@ -221,19 +224,20 @@ with graph_col2:
     ##----------------
     ##Graph 2 - Sector Comparison
 
-    plt.figure()
+    plt.figure(facecolor="#0E1117")
+    plt.gca().set_facecolor("#0E1117")
     x = np.arange(3)
     width = 0.35
     st.caption(sectorInsight)
-    plt.bar(x - width/2 , concSecAvg['ANT'], width, label='ANT', color='#000000')
+    plt.bar(x - width/2 , concSecAvg['ANT'], width, label='ANT', color="#D9D9D9")
     plt.bar(x + width/2 , concSecAvg['RUS'], width, label='RUS', color='#4FAFA9')
+    plt.tick_params(colors="white")
 
-
-    plt.title('Kimi vs Russell: Sector Comparison')
+    plt.title('Kimi vs Russell: Sector Comparison', color="white")
     plt.xticks(x, ['Sector 1','Sector 2','Sector 3'])
     plt.yticks(range(0,50 ,2))
-    plt.xlabel('Sectors')
-    plt.ylabel('Time in seconds')
+    plt.xlabel('Sectors', color="white")
+    plt.ylabel('Time in seconds', color="white")
     plt.legend()
 
     #plt.show()
@@ -246,19 +250,20 @@ with graph_col3:
     
     ##-----------------
     ##Graph 3 - Compound Comparison
-    plt.figure()
+    plt.figure(facecolor="#0E1117")
+    plt.gca().set_facecolor("#0E1117")
     y = np.arange(2)
 
     width = 0.30
     st.caption(tyreInsight)
-    plt.bar(y - width/2, tyreAdvConcat['ANT'], width, label = 'ANT', color='#000000')
+    plt.bar(y - width/2, tyreAdvConcat['ANT'], width, label = 'ANT', color="#D9D9D9")
     plt.bar(y + width/2, tyreAdvConcat['RUS'], width, label = 'RUS', color='#4FAFA9')
-
+    plt.tick_params(colors="white")
     plt.xticks(y, ['MEDIUM', 'SOFT'])
-    plt.title('Kimi vs Russell: Tyre Compound Comparison')
+    plt.title('Kimi vs Russell: Tyre Compound Comparison', color="white")
     plt.yticks(range(1, 130, 10))
-    plt.xlabel('Compound')
-    plt.ylabel('Time in seconds')
+    plt.xlabel('Compound', color="white")
+    plt.ylabel('Time in seconds', color="white")
     plt.legend()
 
     #plt.show()
@@ -269,23 +274,29 @@ with graph_col4:
 
     ## Graph 4 - Sector Consistency
 
-    plt.figure()
+    plt.figure(facecolor="#0E1117")
+    plt.gca().set_facecolor("#0E1117")
     x = np.arange(3)
     width = 0.35
     st.caption(consistencyInsight)
-    plt.bar(x - width/2, concatedSDsector['ANT'], width, label='ANT',color='#000000')
+    plt.bar(x - width/2, concatedSDsector['ANT'], width, label='ANT',color="#D9D9D9")
     plt.bar(x + width/2, concatedSDsector['RUS'], width, label='RUS', color='#4FAFA9')
-
+    plt.tick_params(colors="white")
     plt.xticks(x, ['Sector 1', 'Sector 2', 'Sector 3'])
-    plt.xlabel('Sectors')
-    plt.ylabel('Standard Deviation (seconds)')
-    plt.title('Kimi vs Russell: Sector Consistency')
+    plt.xlabel('Sectors', color="white")
+    plt.ylabel('Standard Deviation (seconds)', color="white")
+    plt.title('Kimi vs Russell: Sector Consistency', color="white")
     plt.legend()
 
     #plt.show()
     st.pyplot(plt)
 
 
+with st.expander("George Russell"):
+    st.write("George has lived and breathed motorsport from his very earliest years. With an older brother who was a national karting champion in his own right, the racetrack has always been his natural home. Now as a victor of multiple Grands Prix, the 27-year-old remains one of the most exciting talents in the sport.")
+
+with st.expander("Kimi Antonelli"):
+    st.write("More commonly known by his middle name, Kimi, he was born in Bologna, Italy, in 2006 and joined the Junior Programme in April 2019, off the back of various titles and wins in the junior karting categories. He will become the third youngest driver to start an F1 Grand Prix when he lined up at the 2025 Australian GP, at 18 years, six months, and 20 days old.")
 
 with st.expander("About this analysis"):
     st.write("Only accurate and non-deleted qualifying laps are considered.")
