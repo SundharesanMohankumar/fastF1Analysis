@@ -56,6 +56,7 @@ with st.spinner("BOX BOX BOX.."):
 
 
 #laps = session.laps
+time.sleep(3)
 laps = pd.read_csv(csvPath)
 
 timeCol = ['LapTime', 'Sector1Time', 'Sector2Time', 'Sector3Time']
