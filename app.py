@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
+from pathlib import Path
 
 st.markdown("""
 <style>
@@ -21,7 +22,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-fastf1.Cache.enable_cache("./cache")
+cache_dir = Path("cache")
+cache_dir.mkdir(exist_ok=True)
+
+fastf1.Cache.enable_cache(str(cache_dir))
 
 schedule = fastf1.get_event_schedule(2025, include_testing=False)
 locations = schedule['Location']
