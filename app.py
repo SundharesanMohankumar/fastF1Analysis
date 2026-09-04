@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from pathlib import Path
+import time
+from fastf1.exceptions import DataNotLoadedError
 
 st.markdown("""
 <style>
@@ -54,7 +56,22 @@ with logo_col:
 
 #st.subheader(f"Kimi Antonelli vs George Russell — {selectedGp}")
 session = fastf1.get_session(2025, selectedGp, 'Q')
-session.load(telemetry=False, weather=False, messages=False)
+
+
+for attempt in range(3):
+    with st.spinner(f"Loading session (attempt {attempt + 1}/3)..."):
+        session.load(laps=True, telemetry=False, weather=False, messages=False)
+
+    try:
+        j = session.laps
+        break
+    except DataNotLoadedError:
+        if attempt == 2:
+            st.error("FastF1 lap data is unavailable right now. Please try again later.")
+            st.stop()
+        time.sleep(3)
+
+#session.load(telemetry=False, weather=False, messages=False)
 #with st.spinner("BOX BOX BOX.."):
     #session.load(telemetry=False, weather=False, messages=False)
 
